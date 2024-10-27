@@ -161,6 +161,27 @@ impl HasMeta for AstNode {
     }
 }
 
+impl Node for AstNode {
+    fn node_type(&self) -> NodeType {
+        use AstNode::*;
+        match self {
+            Doc(i) => i.node_type(),
+            Block(i) => i.node_type(),
+            Inline(i) => i.node_type(),
+            ListItem(i) => i.node_type(),
+            TaskListItem(i) => i.node_type(),
+            DefinitionListItem(i) => i.node_type(),
+            Term(i) => i.node_type(),
+            Definition(i) => i.node_type(),
+            Row(i) => i.node_type(),
+            Cell(i) => i.node_type(),
+            Caption(i) => i.node_type(),
+            Footnote(i) => i.node_type(),
+            Reference(i) => i.node_type(),
+        }
+    }
+}
+
 from_into_variants!(
     AstNode,
     Doc,

@@ -2,11 +2,11 @@
 use serde::{Deserialize, Serialize};
 
 use crate::attributes::{HasMeta, Meta};
-use crate::Node;
 use crate::{
     inline::Inline,
     macros::{atom, from_into_variants, impl_hasmeta},
 };
+use crate::{Node, NodeType};
 
 mod list;
 pub use list::{
@@ -91,6 +91,27 @@ impl HasMeta for Block {
             TaskList(i) => i.meta_mut(),
             DefinitionList(i) => i.meta_mut(),
             Table(i) => i.meta_mut(),
+        }
+    }
+}
+
+impl Node for Block {
+    fn node_type(&self) -> NodeType {
+        use Block::*;
+        match self {
+            Para(i) => i.node_type(),
+            Heading(i) => i.node_type(),
+            ThematicBreak(i) => i.node_type(),
+            Section(i) => i.node_type(),
+            Div(i) => i.node_type(),
+            CodeBlock(i) => i.node_type(),
+            RawBlock(i) => i.node_type(),
+            BlockQuote(i) => i.node_type(),
+            OrderedList(i) => i.node_type(),
+            BulletList(i) => i.node_type(),
+            TaskList(i) => i.node_type(),
+            DefinitionList(i) => i.node_type(),
+            Table(i) => i.node_type(),
         }
     }
 }

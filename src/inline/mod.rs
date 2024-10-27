@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::{
     macros::{atom, from_into_variants, impl_hasmeta, inline_container, text_container},
-    HasMeta, Meta, Node,
+    HasMeta, Meta, Node, NodeType,
 };
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -98,6 +98,38 @@ impl HasMeta for Inline {
             Inline::Delete(i) => i.meta_mut(),
             Inline::DoubleQuoted(i) => i.meta_mut(),
             Inline::SingleQuoted(i) => i.meta_mut(),
+        }
+    }
+}
+
+impl Node for Inline {
+    fn node_type(&self) -> NodeType {
+        match self {
+            Inline::Str(i) => i.node_type(),
+            Inline::SoftBreak(i) => i.node_type(),
+            Inline::HardBreak(i) => i.node_type(),
+            Inline::NonBreakingSpace(i) => i.node_type(),
+            Inline::Symb(i) => i.node_type(),
+            Inline::Verbatim(i) => i.node_type(),
+            Inline::RawInline(i) => i.node_type(),
+            Inline::InlineMath(i) => i.node_type(),
+            Inline::DisplayMath(i) => i.node_type(),
+            Inline::Url(i) => i.node_type(),
+            Inline::Email(i) => i.node_type(),
+            Inline::FootnoteReference(i) => i.node_type(),
+            Inline::SmartPunctuation(i) => i.node_type(),
+            Inline::Emph(i) => i.node_type(),
+            Inline::Strong(i) => i.node_type(),
+            Inline::Link(i) => i.node_type(),
+            Inline::Image(i) => i.node_type(),
+            Inline::Span(i) => i.node_type(),
+            Inline::Mark(i) => i.node_type(),
+            Inline::Superscript(i) => i.node_type(),
+            Inline::Subscript(i) => i.node_type(),
+            Inline::Insert(i) => i.node_type(),
+            Inline::Delete(i) => i.node_type(),
+            Inline::DoubleQuoted(i) => i.node_type(),
+            Inline::SingleQuoted(i) => i.node_type(),
         }
     }
 }
