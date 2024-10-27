@@ -2,6 +2,7 @@ use attributes::{HasMeta, Meta};
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
+use traverse::{Node, NodeType};
 
 mod error;
 pub use error::{Error, Result};
@@ -17,35 +18,7 @@ use inline::Inline;
 
 pub mod attributes;
 
-pub enum NodeType {
-    Root(usize),
-    Branch(usize),
-    Slab,
-    Leaf,
-}
-
-impl NodeType {
-    pub fn is_root(&self) -> bool {
-        matches!(self, Self::Root(_))
-    }
-
-    pub fn is_leaf(&self) -> bool {
-        matches!(self, Self::Leaf)
-    }
-
-    pub fn n_children(&self) -> usize {
-        match self {
-            NodeType::Root(n) => *n,
-            NodeType::Branch(n) => *n,
-            NodeType::Slab => 1,
-            NodeType::Leaf => 0,
-        }
-    }
-}
-
-pub trait Node {
-    fn node_type(&self) -> NodeType;
-}
+pub mod traverse;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize), serde(tag = "tag"))]
