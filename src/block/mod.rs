@@ -95,7 +95,11 @@ impl HasMeta for Block {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(
+    feature = "serde",
+    derive(Serialize, Deserialize),
+    serde(tag = "tag", rename = "para")
+)]
 pub struct Para {
     pub children: Vec<Inline>,
     #[cfg_attr(feature = "serde", serde(flatten))]
@@ -104,7 +108,11 @@ pub struct Para {
 impl_hasmeta!(Para);
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(
+    feature = "serde",
+    derive(Serialize, Deserialize),
+    serde(tag = "tag", rename = "heading")
+)]
 pub struct Heading {
     pub level: u64,
     pub children: Vec<Inline>,
@@ -113,10 +121,14 @@ pub struct Heading {
 }
 impl_hasmeta!(Heading);
 
-atom!(ThematicBreak);
+atom!(ThematicBreak, "thematic_break");
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(
+    feature = "serde",
+    derive(Serialize, Deserialize),
+    serde(tag = "tag", rename = "section")
+)]
 pub struct Section {
     pub children: Vec<Block>,
     #[cfg_attr(feature = "serde", serde(flatten))]
@@ -125,7 +137,11 @@ pub struct Section {
 impl_hasmeta!(Section);
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(
+    feature = "serde",
+    derive(Serialize, Deserialize),
+    serde(tag = "tag", rename = "div")
+)]
 pub struct Div {
     pub children: Vec<Block>,
     #[cfg_attr(feature = "serde", serde(flatten))]
@@ -134,7 +150,11 @@ pub struct Div {
 impl_hasmeta!(Div);
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(
+    feature = "serde",
+    derive(Serialize, Deserialize),
+    serde(tag = "tag", rename = "block_quote")
+)]
 pub struct BlockQuote {
     pub children: Vec<Block>,
     #[cfg_attr(feature = "serde", serde(flatten))]
@@ -143,7 +163,11 @@ pub struct BlockQuote {
 impl_hasmeta!(BlockQuote);
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(
+    feature = "serde",
+    derive(Serialize, Deserialize),
+    serde(tag = "tag", rename = "code_block")
+)]
 pub struct CodeBlock {
     lang: Option<String>,
     text: String,
@@ -153,7 +177,11 @@ pub struct CodeBlock {
 impl_hasmeta!(CodeBlock);
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(
+    feature = "serde",
+    derive(Serialize, Deserialize),
+    serde(tag = "tag", rename = "raw_block")
+)]
 pub struct RawBlock {
     format: String,
     text: String,

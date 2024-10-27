@@ -11,13 +11,16 @@ use crate::{macros::impl_hasmeta, Error, Meta, Result};
 use super::ListItem;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(
+    feature = "serde",
+    derive(Serialize, Deserialize),
+    serde(tag = "tag", rename = "ordered_list")
+)]
 pub struct OrderedList {
     pub style: OrderedListStyle,
     pub tight: bool,
     pub start: Option<u64>,
     pub children: Vec<ListItem>,
-
     #[cfg_attr(feature = "serde", serde(flatten))]
     meta: Meta,
 }

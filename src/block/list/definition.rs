@@ -4,7 +4,11 @@ use serde::{ser::SerializeStruct, Deserialize, Serialize};
 use crate::{macros::impl_hasmeta, Block, Meta};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(
+    feature = "serde",
+    derive(Serialize, Deserialize),
+    serde(tag = "tag", rename = "definition_list")
+)]
 pub struct DefinitionList {
     pub children: Vec<DefinitionListItem>,
     #[cfg_attr(feature = "serde", serde(flatten))]
@@ -16,7 +20,6 @@ impl_hasmeta!(DefinitionList);
 pub struct DefinitionListItem {
     pub term: Term,
     pub definition: Definition,
-
     meta: Meta,
 }
 impl_hasmeta!(DefinitionListItem);
@@ -27,7 +30,8 @@ impl Serialize for DefinitionListItem {
     where
         S: serde::Serializer,
     {
-        let mut s = serializer.serialize_struct("DefinitionListItem", 1)?;
+        let mut s = serializer.serialize_struct("DefinitionListItem", 2)?;
+        s.serialize_field("tag", "definition_list_item")?;
         s.serialize_field("children", &(&self.term, &self.definition))?;
         s.end()
     }
@@ -46,6 +50,7 @@ impl<'de> Deserialize<'de> for DefinitionListItem {
 
 #[derive(Debug, Clone, Deserialize)]
 #[cfg(feature = "serde")]
+#[serde(tag = "tag", rename = "definition_list_item")]
 struct DeserDefinitionListItem {
     children: (Term, Definition),
     #[cfg_attr(feature = "serde", serde(flatten))]
@@ -63,13 +68,30 @@ impl From<DeserDefinitionListItem> for DefinitionListItem {
     }
 }
 
-crate::macros::inline_container!(Term);
+crate::macros::inline_container!(Term, "term");
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(
+    feature = "serde",
+    derive(Serialize, Deserialize),
+    serde(tag = "tag", rename = "definition")
+)]
 pub struct Definition {
     pub children: Vec<Block>,
     #[cfg_attr(feature = "serde", serde(flatten))]
     meta: Meta,
 }
 impl_hasmeta!(Definition);
+
+#[cfg(all(test, feature = "serde"))]
+mod serde_tests {
+    use super::*;
+
+    #[test]
+    fn test_tag_definition() {
+        let s = r#"{"tag":"definition","children":[]}"#;
+        let def: Definition = serde_json::from_str(s).unwrap();
+        let s2 = serde_json::to_string(&def).unwrap();
+        assert_eq!(s, s2);
+    }
+}

@@ -13,7 +13,7 @@ pub use definition::{Definition, DefinitionList, DefinitionListItem, Term};
 #[cfg_attr(
     feature = "serde",
     derive(Serialize, Deserialize),
-    serde(rename_all = "camelCase")
+    serde(tag = "bullet_list", rename = "bullet_list")
 )]
 pub struct BulletList {
     tight: bool,
@@ -39,7 +39,7 @@ pub enum BulletListStyle {
 #[cfg_attr(
     feature = "serde",
     derive(Serialize, Deserialize),
-    serde(rename_all = "camelCase")
+    serde(tag = "tag", rename = "list_item")
 )]
 pub struct ListItem {
     children: Vec<Block>,
@@ -52,7 +52,7 @@ impl_hasmeta!(ListItem);
 #[cfg_attr(
     feature = "serde",
     derive(Serialize, Deserialize),
-    serde(rename_all = "camelCase")
+    serde(tag = "tag", rename = "task_list")
 )]
 pub struct TaskList {
     tight: bool,
@@ -66,7 +66,7 @@ impl_hasmeta!(TaskList);
 #[cfg_attr(
     feature = "serde",
     derive(Serialize, Deserialize),
-    serde(rename_all = "camelCase")
+    serde(tag = "tag", rename = "task_list_item")
 )]
 pub struct TaskListItem {
     checkbox: CheckboxStatus,

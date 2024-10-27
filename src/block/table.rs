@@ -3,7 +3,11 @@ use crate::{macros::impl_hasmeta, Error, Inline, Meta};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Default, Clone, PartialEq, Eq)]
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(
+    feature = "serde",
+    derive(Serialize, Deserialize),
+    serde(tag = "tag", rename = "caption")
+)]
 pub struct Caption {
     pub children: Vec<Inline>,
     #[cfg_attr(feature = "serde", serde(flatten))]
@@ -12,7 +16,11 @@ pub struct Caption {
 impl_hasmeta!(Caption);
 
 #[derive(Debug, Default, Clone, PartialEq, Eq)]
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(
+    feature = "serde",
+    derive(Serialize, Deserialize),
+    serde(tag = "tag", rename = "row")
+)]
 pub struct Row {
     pub head: bool,
     pub children: Vec<Cell>,
@@ -36,7 +44,11 @@ pub enum Alignment {
 }
 
 #[derive(Debug, Default, Clone, PartialEq, Eq)]
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(
+    feature = "serde",
+    derive(Serialize, Deserialize),
+    serde(tag = "tag", rename = "cell")
+)]
 pub struct Cell {
     pub head: bool,
     pub align: Alignment,
@@ -56,6 +68,7 @@ impl_hasmeta!(Table);
 
 #[cfg(feature = "serde")]
 #[derive(Debug, Serialize, Deserialize)]
+#[serde(tag = "tag", rename = "table")]
 struct DeserTable {
     children: Vec<DeserCapOrRow>,
     #[cfg_attr(feature = "serde", serde(flatten))]
@@ -107,6 +120,7 @@ impl<'de> Deserialize<'de> for Table {
 
 #[cfg(feature = "serde")]
 #[derive(Debug, Serialize)]
+#[serde(tag = "tag", rename = "table")]
 struct SerTable<'a> {
     children: Vec<SerCapOrRow<'a>>,
     #[cfg_attr(feature = "serde", serde(flatten))]

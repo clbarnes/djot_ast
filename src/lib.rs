@@ -18,7 +18,7 @@ use inline::Inline;
 pub mod attributes;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize), serde(tag = "tag"))]
 pub struct Reference {
     pub label: String,
     pub destination: String,
@@ -28,7 +28,7 @@ pub struct Reference {
 impl_hasmeta!(Reference);
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize), serde(tag = "tag"))]
 pub struct Footnote {
     pub label: String,
     pub children: Vec<Block>,
@@ -41,7 +41,7 @@ impl_hasmeta!(Footnote);
 #[cfg_attr(
     feature = "serde",
     derive(Serialize, Deserialize),
-    serde(rename_all = "camelCase")
+    serde(rename_all = "camelCase", tag = "tag")
 )]
 pub struct Doc {
     pub references: HashMap<String, Reference>,

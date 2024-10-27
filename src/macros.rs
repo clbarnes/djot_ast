@@ -13,9 +13,13 @@ macro_rules! impl_hasmeta {
 }
 
 macro_rules! text_container {
-    ($name:ident) => {
+    ($name:ident, $tag:literal) => {
         #[derive(Debug, Clone, PartialEq, Eq)]
-        #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+        #[cfg_attr(
+                    feature = "serde",
+                    derive(serde::Serialize, serde::Deserialize),
+                    serde(tag = "tag", rename = $tag)
+                )]
         pub struct $name {
             pub text: String,
             #[cfg_attr(feature = "serde", serde(flatten))]
@@ -27,9 +31,9 @@ macro_rules! text_container {
 }
 
 macro_rules! inline_container {
-    ($name:ident) => {
+    ($name:ident, $tag:literal) => {
         #[derive(Debug, Clone, PartialEq, Eq)]
-        #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+        #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize), serde(tag = "tag", rename = $tag))]
         pub struct $name {
             pub children: Vec<crate::inline::Inline>,
             #[cfg_attr(feature = "serde", serde(flatten))]
@@ -40,9 +44,9 @@ macro_rules! inline_container {
 }
 
 macro_rules! atom {
-    ($name:ident) => {
+    ($name:ident, $tag:literal) => {
         #[derive(Debug, Clone, PartialEq, Eq)]
-        #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+        #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize), serde(tag = "tag", rename = $tag))]
         pub struct $name {
             #[cfg_attr(feature = "serde", serde(flatten))]
             meta: crate::Meta,

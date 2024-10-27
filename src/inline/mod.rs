@@ -131,23 +131,23 @@ from_into_variants!(
     SingleQuoted
 );
 
-atom!(SoftBreak);
-atom!(HardBreak);
-atom!(NonBreakingSpace);
+atom!(SoftBreak, "soft_break");
+atom!(HardBreak, "hard_break");
+atom!(NonBreakingSpace, "non_breaking_space");
 
-text_container!(Str);
-text_container!(FootnoteReference);
-text_container!(Verbatim);
-text_container!(InlineMath);
-text_container!(DisplayMath);
-text_container!(Url);
-text_container!(Email);
+text_container!(Str, "str");
+text_container!(FootnoteReference, "footnote_reference");
+text_container!(Verbatim, "verbatim");
+text_container!(InlineMath, "inline_math");
+text_container!(DisplayMath, "display_math");
+text_container!(Url, "url");
+text_container!(Email, "email");
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[cfg_attr(
     feature = "serde",
     derive(Serialize, Deserialize),
-    serde(tag = "tag", rename_all = "snake_case")
+    serde(rename_all = "snake_case")
 )]
 pub enum SmartPunctuationType {
     LeftSingleQuote,
@@ -160,7 +160,11 @@ pub enum SmartPunctuationType {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(
+    feature = "serde",
+    derive(Serialize, Deserialize),
+    serde(tag = "tag", rename = "smart_punctuation")
+)]
 pub struct SmartPunctuation {
     #[cfg_attr(feature = "serde", serde(rename = "type"))]
     pub punc_type: SmartPunctuationType,
@@ -171,7 +175,11 @@ pub struct SmartPunctuation {
 impl_hasmeta!(SmartPunctuation);
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(
+    feature = "serde",
+    derive(Serialize, Deserialize),
+    serde(tag = "tag", rename = "symb")
+)]
 pub struct Symb {
     pub alias: String,
     #[cfg_attr(feature = "serde", serde(flatten))]
@@ -180,7 +188,11 @@ pub struct Symb {
 impl_hasmeta!(Symb);
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(
+    feature = "serde",
+    derive(Serialize, Deserialize),
+    serde(tag = "tag", rename = "raw_inline")
+)]
 pub struct RawInline {
     pub format: String,
     pub text: String,
@@ -190,7 +202,11 @@ pub struct RawInline {
 impl_hasmeta!(RawInline);
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(
+    feature = "serde",
+    derive(Serialize, Deserialize),
+    serde(tag = "tag", rename = "link")
+)]
 pub struct Link {
     destination: Option<String>,
     reference: Option<String>,
@@ -201,7 +217,11 @@ pub struct Link {
 impl_hasmeta!(Link);
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(
+    feature = "serde",
+    derive(Serialize, Deserialize),
+    serde(tag = "tag", rename = "image")
+)]
 pub struct Image {
     pub destination: Option<String>,
     pub reference: Option<String>,
@@ -212,13 +232,13 @@ pub struct Image {
 
 impl_hasmeta!(Image);
 
-inline_container!(Emph);
-inline_container!(Strong);
-inline_container!(Span);
-inline_container!(Mark);
-inline_container!(Superscript);
-inline_container!(Subscript);
-inline_container!(Delete);
-inline_container!(Insert);
-inline_container!(DoubleQuoted);
-inline_container!(SingleQuoted);
+inline_container!(Emph, "emph");
+inline_container!(Strong, "strong");
+inline_container!(Span, "span");
+inline_container!(Mark, "mark");
+inline_container!(Superscript, "superscript");
+inline_container!(Subscript, "subscript");
+inline_container!(Delete, "delete");
+inline_container!(Insert, "insert");
+inline_container!(DoubleQuoted, "double_quoted");
+inline_container!(SingleQuoted, "single_quoted");
