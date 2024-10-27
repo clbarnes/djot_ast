@@ -1,0 +1,15 @@
+[package]
+name = "djot_ast"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+serde = { version = "1.0.213", features = ["derive"], optional = true }
+thiserror = "1.0.65"
+
+[features]
+default = ["serde"]
+
+[dev-dependencies]
+serde_json = "1.0.132"
+rstest = "0.23.0"
