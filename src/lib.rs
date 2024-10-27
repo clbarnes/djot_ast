@@ -17,6 +17,36 @@ use inline::Inline;
 
 pub mod attributes;
 
+pub enum NodeType {
+    Root(usize),
+    Branch(usize),
+    Slab,
+    Leaf,
+}
+
+impl NodeType {
+    pub fn is_root(&self) -> bool {
+        matches!(self, Self::Root(_))
+    }
+
+    pub fn is_leaf(&self) -> bool {
+        matches!(self, Self::Leaf)
+    }
+
+    pub fn n_children(&self) -> usize {
+        match self {
+            NodeType::Root(n) => *n,
+            NodeType::Branch(n) => *n,
+            NodeType::Slab => 1,
+            NodeType::Leaf => 0,
+        }
+    }
+}
+
+pub trait Node {
+    fn node_type(&self) -> NodeType;
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize), serde(tag = "tag"))]
 pub struct Reference {
@@ -24,6 +54,11 @@ pub struct Reference {
     pub destination: String,
     #[cfg_attr(feature = "serde", serde(flatten))]
     meta: Meta,
+}
+impl Node for Reference {
+    fn node_type(&self) -> NodeType {
+        NodeType::Leaf
+    }
 }
 impl_hasmeta!(Reference);
 
@@ -34,6 +69,11 @@ pub struct Footnote {
     pub children: Vec<Block>,
     #[cfg_attr(feature = "serde", serde(flatten))]
     meta: Meta,
+}
+impl Node for Footnote {
+    fn node_type(&self) -> NodeType {
+        NodeType::Branch(self.children.len())
+    }
 }
 impl_hasmeta!(Footnote);
 
@@ -50,6 +90,11 @@ pub struct Doc {
     pub children: Vec<Block>,
     #[cfg_attr(feature = "serde", serde(flatten))]
     meta: Meta,
+}
+impl Node for Doc {
+    fn node_type(&self) -> NodeType {
+        NodeType::Root(self.children.len())
+    }
 }
 
 impl_hasmeta!(Doc);

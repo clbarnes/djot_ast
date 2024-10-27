@@ -1,7 +1,7 @@
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 
-use crate::{macros::impl_hasmeta, Block, Meta};
+use crate::{macros::impl_hasmeta, Block, Meta, Node};
 
 mod ordered;
 pub use ordered::{FenceStyle, NumberStyle, OrderedList, OrderedListStyle};
@@ -21,6 +21,11 @@ pub struct BulletList {
     children: Vec<ListItem>,
     #[cfg_attr(feature = "serde", serde(flatten))]
     meta: Meta,
+}
+impl Node for BulletList {
+    fn node_type(&self) -> crate::NodeType {
+        crate::NodeType::Branch(self.children.len())
+    }
 }
 impl_hasmeta!(BulletList);
 
@@ -46,6 +51,11 @@ pub struct ListItem {
     #[cfg_attr(feature = "serde", serde(flatten))]
     meta: Meta,
 }
+impl Node for ListItem {
+    fn node_type(&self) -> crate::NodeType {
+        crate::NodeType::Branch(self.children.len())
+    }
+}
 impl_hasmeta!(ListItem);
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -60,6 +70,11 @@ pub struct TaskList {
     #[cfg_attr(feature = "serde", serde(flatten))]
     meta: Meta,
 }
+impl Node for TaskList {
+    fn node_type(&self) -> crate::NodeType {
+        crate::NodeType::Branch(self.children.len())
+    }
+}
 impl_hasmeta!(TaskList);
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -73,6 +88,11 @@ pub struct TaskListItem {
     children: Vec<Block>,
     #[cfg_attr(feature = "serde", serde(flatten))]
     meta: Meta,
+}
+impl Node for TaskListItem {
+    fn node_type(&self) -> crate::NodeType {
+        crate::NodeType::Branch(self.children.len())
+    }
 }
 impl_hasmeta!(TaskListItem);
 

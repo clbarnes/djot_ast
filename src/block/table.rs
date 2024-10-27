@@ -1,4 +1,4 @@
-use crate::{macros::impl_hasmeta, Error, Inline, Meta};
+use crate::{macros::impl_hasmeta, Error, Inline, Meta, Node};
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 
@@ -13,6 +13,11 @@ pub struct Caption {
     #[cfg_attr(feature = "serde", serde(flatten))]
     meta: Meta,
 }
+impl Node for Caption {
+    fn node_type(&self) -> crate::NodeType {
+        crate::NodeType::Branch(self.children.len())
+    }
+}
 impl_hasmeta!(Caption);
 
 #[derive(Debug, Default, Clone, PartialEq, Eq)]
@@ -26,6 +31,11 @@ pub struct Row {
     pub children: Vec<Cell>,
     #[cfg_attr(feature = "serde", serde(flatten))]
     meta: Meta,
+}
+impl Node for Row {
+    fn node_type(&self) -> crate::NodeType {
+        crate::NodeType::Branch(self.children.len())
+    }
 }
 impl_hasmeta!(Row);
 
@@ -56,6 +66,11 @@ pub struct Cell {
     #[cfg_attr(feature = "serde", serde(flatten))]
     meta: Meta,
 }
+impl Node for Cell {
+    fn node_type(&self) -> crate::NodeType {
+        crate::NodeType::Branch(self.children.len())
+    }
+}
 impl_hasmeta!(Cell);
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -63,6 +78,11 @@ pub struct Table {
     caption: Caption,
     rows: Vec<Row>,
     meta: Meta,
+}
+impl Node for Table {
+    fn node_type(&self) -> crate::NodeType {
+        crate::NodeType::Branch(1 + self.rows.len())
+    }
 }
 impl_hasmeta!(Table);
 

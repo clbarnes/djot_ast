@@ -1,7 +1,7 @@
 #[cfg(feature = "serde")]
 use serde::{ser::SerializeStruct, Deserialize, Serialize};
 
-use crate::{macros::impl_hasmeta, Block, Meta};
+use crate::{macros::impl_hasmeta, Block, Meta, Node};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[cfg_attr(
@@ -14,6 +14,11 @@ pub struct DefinitionList {
     #[cfg_attr(feature = "serde", serde(flatten))]
     meta: Meta,
 }
+impl Node for DefinitionList {
+    fn node_type(&self) -> crate::NodeType {
+        crate::NodeType::Branch(self.children.len())
+    }
+}
 impl_hasmeta!(DefinitionList);
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -21,6 +26,11 @@ pub struct DefinitionListItem {
     pub term: Term,
     pub definition: Definition,
     meta: Meta,
+}
+impl Node for DefinitionListItem {
+    fn node_type(&self) -> crate::NodeType {
+        crate::NodeType::Branch(2)
+    }
 }
 impl_hasmeta!(DefinitionListItem);
 
@@ -80,6 +90,11 @@ pub struct Definition {
     pub children: Vec<Block>,
     #[cfg_attr(feature = "serde", serde(flatten))]
     meta: Meta,
+}
+impl Node for Definition {
+    fn node_type(&self) -> crate::NodeType {
+        crate::NodeType::Branch(self.children.len())
+    }
 }
 impl_hasmeta!(Definition);
 

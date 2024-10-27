@@ -16,14 +16,20 @@ macro_rules! text_container {
     ($name:ident, $tag:literal) => {
         #[derive(Debug, Clone, PartialEq, Eq)]
         #[cfg_attr(
-                    feature = "serde",
-                    derive(serde::Serialize, serde::Deserialize),
-                    serde(tag = "tag", rename = $tag)
-                )]
+                                                    feature = "serde",
+                                                    derive(serde::Serialize, serde::Deserialize),
+                                                    serde(tag = "tag", rename = $tag),
+                                                )]
         pub struct $name {
             pub text: String,
             #[cfg_attr(feature = "serde", serde(flatten))]
             meta: crate::Meta,
+        }
+
+        impl crate::Node for $name {
+            fn node_type(&self) -> crate::NodeType {
+                crate::NodeType::Leaf
+            }
         }
 
         crate::macros::impl_hasmeta!($name);
@@ -39,7 +45,14 @@ macro_rules! inline_container {
             #[cfg_attr(feature = "serde", serde(flatten))]
             meta: crate::Meta,
         }
+
         crate::macros::impl_hasmeta!($name);
+
+        impl crate::Node for $name {
+            fn node_type(&self) -> crate::NodeType {
+                crate::NodeType::Branch(self.children.len())
+            }
+        }
     };
 }
 
@@ -53,6 +66,12 @@ macro_rules! atom {
         }
 
         crate::macros::impl_hasmeta!($name);
+
+        impl crate::Node for $name {
+            fn node_type(&self) -> crate::NodeType {
+                crate::NodeType::Leaf
+            }
+        }
     };
 }
 

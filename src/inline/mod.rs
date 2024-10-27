@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::{
     macros::{atom, from_into_variants, impl_hasmeta, inline_container, text_container},
-    HasMeta, Meta,
+    HasMeta, Meta, Node,
 };
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -172,6 +172,11 @@ pub struct SmartPunctuation {
     #[cfg_attr(feature = "serde", serde(flatten))]
     meta: Meta,
 }
+impl Node for SmartPunctuation {
+    fn node_type(&self) -> crate::NodeType {
+        crate::NodeType::Leaf
+    }
+}
 impl_hasmeta!(SmartPunctuation);
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -184,6 +189,11 @@ pub struct Symb {
     pub alias: String,
     #[cfg_attr(feature = "serde", serde(flatten))]
     meta: Meta,
+}
+impl Node for Symb {
+    fn node_type(&self) -> crate::NodeType {
+        crate::NodeType::Leaf
+    }
 }
 impl_hasmeta!(Symb);
 
@@ -198,6 +208,11 @@ pub struct RawInline {
     pub text: String,
     #[cfg_attr(feature = "serde", serde(flatten))]
     meta: Meta,
+}
+impl Node for RawInline {
+    fn node_type(&self) -> crate::NodeType {
+        crate::NodeType::Leaf
+    }
 }
 impl_hasmeta!(RawInline);
 
@@ -214,6 +229,11 @@ pub struct Link {
     #[cfg_attr(feature = "serde", serde(flatten))]
     meta: Meta,
 }
+impl Node for Link {
+    fn node_type(&self) -> crate::NodeType {
+        crate::NodeType::Branch(self.children.len())
+    }
+}
 impl_hasmeta!(Link);
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -228,6 +248,11 @@ pub struct Image {
     pub children: Vec<Inline>,
     #[cfg_attr(feature = "serde", serde(flatten))]
     meta: Meta,
+}
+impl Node for Image {
+    fn node_type(&self) -> crate::NodeType {
+        crate::NodeType::Branch(self.children.len())
+    }
 }
 
 impl_hasmeta!(Image);

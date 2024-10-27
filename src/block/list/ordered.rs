@@ -6,7 +6,7 @@ use std::{
 #[cfg(feature = "serde")]
 use serde::{de, Deserialize, Serialize};
 
-use crate::{macros::impl_hasmeta, Error, Meta, Result};
+use crate::{macros::impl_hasmeta, Error, Meta, Node, Result};
 
 use super::ListItem;
 
@@ -23,6 +23,11 @@ pub struct OrderedList {
     pub children: Vec<ListItem>,
     #[cfg_attr(feature = "serde", serde(flatten))]
     meta: Meta,
+}
+impl Node for OrderedList {
+    fn node_type(&self) -> crate::NodeType {
+        crate::NodeType::Branch(self.children.len())
+    }
 }
 impl_hasmeta!(OrderedList);
 

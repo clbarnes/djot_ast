@@ -2,6 +2,7 @@
 use serde::{Deserialize, Serialize};
 
 use crate::attributes::{HasMeta, Meta};
+use crate::Node;
 use crate::{
     inline::Inline,
     macros::{atom, from_into_variants, impl_hasmeta},
@@ -105,6 +106,11 @@ pub struct Para {
     #[cfg_attr(feature = "serde", serde(flatten))]
     meta: Meta,
 }
+impl Node for Para {
+    fn node_type(&self) -> crate::NodeType {
+        crate::NodeType::Branch(self.children.len())
+    }
+}
 impl_hasmeta!(Para);
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -118,6 +124,11 @@ pub struct Heading {
     pub children: Vec<Inline>,
     #[cfg_attr(feature = "serde", serde(flatten))]
     meta: Meta,
+}
+impl Node for Heading {
+    fn node_type(&self) -> crate::NodeType {
+        crate::NodeType::Branch(self.children.len())
+    }
 }
 impl_hasmeta!(Heading);
 
@@ -134,6 +145,11 @@ pub struct Section {
     #[cfg_attr(feature = "serde", serde(flatten))]
     meta: Meta,
 }
+impl Node for Section {
+    fn node_type(&self) -> crate::NodeType {
+        crate::NodeType::Branch(self.children.len())
+    }
+}
 impl_hasmeta!(Section);
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -147,6 +163,11 @@ pub struct Div {
     #[cfg_attr(feature = "serde", serde(flatten))]
     meta: Meta,
 }
+impl Node for Div {
+    fn node_type(&self) -> crate::NodeType {
+        crate::NodeType::Branch(self.children.len())
+    }
+}
 impl_hasmeta!(Div);
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -159,6 +180,11 @@ pub struct BlockQuote {
     pub children: Vec<Block>,
     #[cfg_attr(feature = "serde", serde(flatten))]
     meta: Meta,
+}
+impl Node for BlockQuote {
+    fn node_type(&self) -> crate::NodeType {
+        crate::NodeType::Branch(self.children.len())
+    }
 }
 impl_hasmeta!(BlockQuote);
 
@@ -174,6 +200,11 @@ pub struct CodeBlock {
     #[cfg_attr(feature = "serde", serde(flatten))]
     meta: Meta,
 }
+impl Node for CodeBlock {
+    fn node_type(&self) -> crate::NodeType {
+        crate::NodeType::Leaf
+    }
+}
 impl_hasmeta!(CodeBlock);
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -187,5 +218,10 @@ pub struct RawBlock {
     text: String,
     #[cfg_attr(feature = "serde", serde(flatten))]
     meta: Meta,
+}
+impl Node for RawBlock {
+    fn node_type(&self) -> crate::NodeType {
+        crate::NodeType::Leaf
+    }
 }
 impl_hasmeta!(RawBlock);
